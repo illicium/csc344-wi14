@@ -1,0 +1,11 @@
+import os
+
+env = Environment()
+
+# pass TERM variable to get color output with clang
+env['ENV']['TERM'] = os.environ['TERM']
+
+env.Append(CCFLAGS = ['-g', '-Wall', '-pedantic', '-std=c99'])
+env.Append(LIBS = ['sox'])
+
+env.Program('beatrepeat.c')
