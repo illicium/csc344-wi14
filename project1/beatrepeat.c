@@ -17,8 +17,8 @@ void usage() {
             "    -T    tempo (decimal > 0)\n"
             "    -b    beats (integer > 0)\n"
             "    -o    offset (integer >= 0)\n"
+            "    -h    max hunk slices (integer > 0)\n"
             "    -c    max chunk slices (integer > 0)\n"
-            "    -p    max period slices (integer > 0)\n"
             "    -s    shuffle chance (decimal >= 0)\n"
             "    -r    repeat chance (decimal >= 0)\n"
             "    -S    random seed (integer)\n");
@@ -27,8 +27,8 @@ void usage() {
 typedef struct _arguments {
     double tempo;
     double beats;
+    unsigned int hunk_slices;
     unsigned int chunk_slices;
-    unsigned int period_slices;
     unsigned int offset;
     double shuffle_chance;
     double repeat_chance;
@@ -47,6 +47,14 @@ double secs_per_beat(double tempo) {
     return (1.0 / tempo) * 60;
 }
 
+double drand() {
+    return rand() / (double) RAND_MAX;
+}
+
+unsigned int rand_interval(unsigned int min, unsigned int max) {
+    return min + rand() / (RAND_MAX / (max - min + 1) + 1);
+}
+
 int main(int argc, char *argv[]) {
     static sox_format_t *in, *out;
     sox_sample_t *buf;
@@ -57,8 +65,8 @@ int main(int argc, char *argv[]) {
 
     args.tempo = 120;
     args.beats = 4;
+    args.hunk_slices = 8;
     args.chunk_slices = 8;
-    args.period_slices = 8;
     args.offset = 2;
     args.shuffle_chance = 0.3;
     args.repeat_chance = 0.75;
@@ -71,7 +79,7 @@ int main(int argc, char *argv[]) {
 
     /* parse arguments */
     char c;
-    while ((c = getopt(argc, argv, "vt:T:b:c:p:o:s:r:S:")) != -1) {
+    while ((c = getopt(argc, argv, "vt:T:b:h:c:o:s:r:S:")) != -1) {
         switch (c) {
         case 'v': /* verbose */
             sox_get_globals()->verbosity++;
@@ -97,11 +105,11 @@ int main(int argc, char *argv[]) {
             }
 
             break;
+        case 'h': /* hunk slices */
+            args.hunk_slices = strtoumax(optarg, NULL, 10);
+            break;
         case 'c': /* chunk slices */
             args.chunk_slices = strtoumax(optarg, NULL, 10);
-            break;
-        case 'p': /* period slices */
-            args.period_slices = strtoumax(optarg, NULL, 10);
             break;
         case 'o': /* offset */
             args.offset = strtoumax(optarg, NULL, 10);
@@ -137,10 +145,14 @@ int main(int argc, char *argv[]) {
 
     srand(args.seed);
 
+    /* open input file */
+
     if ((in = sox_open_read(argv[optind++], NULL, NULL, NULL)) == NULL) {
         fprintf(stderr, "error: could not read input file\n");
         exit(EXIT_FAILURE);
     }
+
+    /* open output file/device */
 
     if ((out = sox_open_write(argv[optind++], &in->signal,
                     NULL, args.output_type, NULL, NULL)) == NULL) {
@@ -148,51 +160,44 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    /* buffer contains the specified number of beats each time we read */
     buf_period = secs_per_beat(args.tempo) * args.beats;
     buf_size = bufsize(in, buf_period);
-
-    unsigned int period_slices;
-    double buf_period_slice;
-    size_t buf_size_slice;
-
     buf = (sox_sample_t *) malloc(sizeof(sox_sample_t) * buf_size);
 
     while ((read = sox_read(in, buf, buf_size)) != 0) {
-        period_slices = (2 * ((rand() % args.period_slices) + 1));
-        buf_period_slice = buf_period / period_slices;
-        buf_size_slice = bufsize(in, buf_period_slice);
+        /* the buffer is virtually sliced into equally sized portions */
+        unsigned int hunks = args.hunk_slices;
+        size_t hunk_len = ((buf_size / in->signal.channels) /
+                hunks) * in->signal.channels;
 
-        double r;
-        for (unsigned int p = 0; p < period_slices; p++) {
-            r = rand() / (double) RAND_MAX;
-
-            unsigned int period_slice;
-            if (r < args.shuffle_chance) {
-                period_slice = rand() % period_slices;
+        for (unsigned int h = 0; h < hunks; h++) {
+            /* choose a random hunk, if we are lucky (shuffle chance) and
+             * if the shuffling is not offset (offset causes the hunks in
+             * the beginning to be in regular order). this is not really
+             * shuffling though. */
+            unsigned int hunk;
+            if (h >= args.offset && drand() < args.shuffle_chance) {
+                hunk = rand_interval(args.offset, hunks - 1);
             } else {
-                period_slice = p;
+                hunk = h;
             }
 
-            unsigned int chunk_slices = (rand() % 2 == 0 ? 2 : 3) *
-                ((rand() % (args.chunk_slices - 1)) + 1);
+            /* slice the hunk further into chunks */
 
-            size_t chunklen = ((buf_size_slice / in->signal.channels) /
-                chunk_slices) * in->signal.channels;
+            unsigned int chunks = rand_interval(1, args.chunk_slices);
+            size_t chunk_len = ((hunk_len / in->signal.channels) /
+                chunks) * in->signal.channels;
 
             unsigned int chunk = 0;
-            for (unsigned int c = 0; c < chunk_slices; c++) {
-                if (c > args.offset) {
-                    r = rand() / (double) RAND_MAX;
-                }
-
-                if (r > args.repeat_chance) {
+            for (unsigned int c = 0; c < chunks; c++) {
+                if (drand() > args.repeat_chance) {
                     chunk = c;
                 }
 
                 sox_write(out,
-                        buf + (period_slice * buf_size_slice) +
-                            (chunk * chunklen), 
-                        chunklen);
+                        buf + (hunk * hunk_len) + (chunk * chunk_len),
+                        chunk_len);
             }
         }
     }
