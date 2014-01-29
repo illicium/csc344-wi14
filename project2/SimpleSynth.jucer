@@ -11,22 +11,50 @@
               companyName="illicium">
   <MAINGROUP id="oHgzX1" name="SimpleSynth">
     <GROUP id="{8B79ACEA-99D9-1670-89F0-7639368DA37D}" name="Source">
-      <FILE id="jbyARr" name="SimpleSynthSound.cpp" compile="1" resource="0"
-            file="Source/SimpleSynthSound.cpp"/>
-      <FILE id="fh1xzV" name="SimpleSynthVoice.cpp" compile="1" resource="0"
-            file="Source/SimpleSynthVoice.cpp"/>
+      <GROUP id="{15B0C410-2148-9017-97CA-3ADF8AF67E02}" name="Components">
+        <FILE id="xAZTE3" name="OscComponent.cpp" compile="1" resource="0"
+              file="Source/OscComponent.cpp"/>
+        <FILE id="HAMtvj" name="OscComponent.h" compile="0" resource="0" file="Source/OscComponent.h"/>
+        <FILE id="pjWaVv" name="ADSRComponent.cpp" compile="1" resource="0"
+              file="Source/ADSRComponent.cpp"/>
+        <FILE id="a75lWD" name="ADSRComponent.h" compile="0" resource="0" file="Source/ADSRComponent.h"/>
+      </GROUP>
+      <FILE id="FINXk8" name="ADSR.cpp" compile="1" resource="0" file="Source/ADSR.cpp"/>
+      <FILE id="EERVhO" name="ADSR.h" compile="0" resource="0" file="Source/ADSR.h"/>
+      <FILE id="ij93W7" name="Generator.h" compile="0" resource="0" file="Source/Generator.h"/>
+      <FILE id="Wo9pdt" name="Oscillator.cpp" compile="1" resource="0" file="Source/Oscillator.cpp"/>
+      <FILE id="BwVDwS" name="Oscillator.h" compile="0" resource="0" file="Source/Oscillator.h"/>
+      <FILE id="patrGA" name="Parameter.cpp" compile="1" resource="0" file="Source/Parameter.cpp"/>
+      <FILE id="iXzWgN" name="Parameter.h" compile="0" resource="0" file="Source/Parameter.h"/>
+      <FILE id="gJYRnb" name="PerformanceReactive.h" compile="0" resource="0"
+            file="Source/PerformanceReactive.h"/>
       <FILE id="XjhWvR" name="SimpleSynthAudioProcessor.cpp" compile="1"
             resource="0" file="Source/SimpleSynthAudioProcessor.cpp"/>
       <FILE id="HQIwet" name="SimpleSynthAudioProcessor.h" compile="0" resource="0"
             file="Source/SimpleSynthAudioProcessor.h"/>
-      <FILE id="b3oYAr" name="SimpleSynthAudioProcessorEditor.cpp" compile="1"
+      <FILE id="Gp4R5z" name="SimpleSynthAudioProcessorEditor.cpp" compile="1"
             resource="0" file="Source/SimpleSynthAudioProcessorEditor.cpp"/>
-      <FILE id="dFL7jm" name="SimpleSynthAudioProcessorEditor.h" compile="0"
+      <FILE id="GDRXgp" name="SimpleSynthAudioProcessorEditor.h" compile="0"
             resource="0" file="Source/SimpleSynthAudioProcessorEditor.h"/>
       <FILE id="b6IE1S" name="SimpleSynthSound.h" compile="0" resource="0"
             file="Source/SimpleSynthSound.h"/>
+      <FILE id="fh1xzV" name="SimpleSynthVoice.cpp" compile="1" resource="0"
+            file="Source/SimpleSynthVoice.cpp"/>
       <FILE id="sGqLua" name="SimpleSynthVoice.h" compile="0" resource="0"
             file="Source/SimpleSynthVoice.h"/>
+      <FILE id="GikvzM" name="SineOscillator.h" compile="0" resource="0"
+            file="Source/SineOscillator.h"/>
+      <FILE id="GhizoD" name="SynthADSR.cpp" compile="1" resource="0" file="Source/SynthADSR.cpp"/>
+      <FILE id="K1PsNQ" name="SynthADSR.h" compile="0" resource="0" file="Source/SynthADSR.h"/>
+      <FILE id="CeeqdQ" name="SynthLFO.cpp" compile="1" resource="0" file="Source/SynthLFO.cpp"/>
+      <FILE id="tctl08" name="SynthLFO.h" compile="0" resource="0" file="Source/SynthLFO.h"/>
+      <FILE id="Uleh0B" name="SynthOsc.cpp" compile="1" resource="0" file="Source/SynthOsc.cpp"/>
+      <FILE id="lgCXUu" name="SynthOsc.h" compile="0" resource="0" file="Source/SynthOsc.h"/>
+      <FILE id="i4Hp2t" name="Util.h" compile="0" resource="0" file="Source/Util.h"/>
+      <FILE id="BJL1Iu" name="WaveformOscillator.cpp" compile="1" resource="0"
+            file="Source/WaveformOscillator.cpp"/>
+      <FILE id="NotRrS" name="WaveformOscillator.h" compile="0" resource="0"
+            file="Source/WaveformOscillator.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

@@ -3,13 +3,14 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+class SimpleSynthVoice;
+
 class SimpleSynthSound : public SynthesiserSound
 {
+    friend SimpleSynthVoice;
 public:
-    SimpleSynthSound() {}
-    
     bool appliesToNote (const int /*midiNoteNumber*/) { return true; }
-    bool appliesToChannel (const int /*midiChannel*/) { return true; }
+    bool appliesToChannel (const int /*midiChannel*/) { return true; }    
 };
 
 #endif

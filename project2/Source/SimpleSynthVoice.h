@@ -1,13 +1,21 @@
 #ifndef SIMPLESYNTHVOICE_H
 #define SIMPLESYNTHVOICE_H
 
+#include <memory>
+
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class SimpleSynthVoice : public SynthesiserVoice
+#include "SynthOsc.h"
+#include "SynthADSR.h"
+#include "SynthLFO.h"
+#include "Parameter.h"
+
+class SimpleSynthVoice : public SynthesiserVoice,
+                         public Parameterized
 {
 public:
     SimpleSynthVoice();
-    
+        
     void startNote (int midiNoteNumber, float velocity,
                     SynthesiserSound* sound,
                     int currentPitchWheelPosition);
@@ -20,12 +28,16 @@ public:
     bool canPlaySound (SynthesiserSound* sound);
     
 private:
-    double gain;
+    shared_ptr<SynthOsc> osc1;
+    shared_ptr<SynthOsc> osc2;
+    shared_ptr<SynthADSR> adsr1;
+    shared_ptr<SynthADSR> adsr2;
+    shared_ptr<SynthLFO> lfo1;
+    //shared_ptr<SynthLFO> lfo2;
+
     double freq;
-    double period;
-    double curAngle;
-    double angleDelta;
     bool playing;
+    
 };
 
 #endif

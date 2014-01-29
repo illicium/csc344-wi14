@@ -3,24 +3,26 @@
 #include "SimpleSynthVoice.h"
 #include "SimpleSynthSound.h"
 
-const float defaultGain = 1.0f;
-
 SimpleSynthAudioProcessor::SimpleSynthAudioProcessor()
-    : lastUIWidth(400),
-    lastUIHeight(200),
-    gain(defaultGain)
+    : needsUIUpdate(false)
 {
-    for (int i = 0; i < 4; i++) {
-        synth.addVoice(new SimpleSynthVoice());
-    }
-    
+    synth.addVoice(new SimpleSynthVoice());
     synth.addSound(new SimpleSynthSound());
-}
 
-SimpleSynthAudioProcessor::~SimpleSynthAudioProcessor()
-{
-}
+    // copy parameters from the voice
+    // FIXME: have voices share parameters somehow so we can have multiple voices
+    
+    SimpleSynthVoice* firstVoice = static_cast<SimpleSynthVoice*>(synth.getVoice(0));
+    parameters = firstVoice->getParameters();
 
+    // get a list of all parameter ids so we can surface them as plugin parameters
+    // in a known order
+
+    for (auto& param : *parameters) {
+        parameterIds.push_back(param.first);
+    }
+
+}
 
 void SimpleSynthAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
@@ -38,13 +40,6 @@ void SimpleSynthAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
 {
     const int numSamples = buffer.getNumSamples();
     
-    // Go through the incoming data, and apply our gain to it...
-    /*
-     for (int channel = 0; channel < getNumInputChannels(); channel++) {
-        buffer.applyGain(channel, 0, buffer.getNumSamples(), gain);
-    }
-     */
-    
     // clear input and output
     for (int i = 0; i < getNumOutputChannels(); ++i) {
         buffer.clear(i, 0, buffer.getNumSamples());
@@ -54,145 +49,73 @@ void SimpleSynthAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
 
     synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
     
-    /*/
-    for (int channel = 0; channel < getNumOutputChannels(); ++channel)
-    {
-        float* channelData = buffer.getSampleData(channel);
-        
-        for (int i = 0; i < numSamples; ++i)
-        {
-            channelData[i] = r.nextFloat();
-        }
-    }*/
-
+    // apply gain (volume parameter)
+    /*
+    for (int i = 0; i < getNumOutputChannels(); ++i) {
+        buffer.applyGain(i, 0, buffer.getNumSamples(), params[volumeParam]);
+    }
+    */
 }
 
-
-AudioProcessorEditor* SimpleSynthAudioProcessor::createEditor()
-{
+AudioProcessorEditor* SimpleSynthAudioProcessor::createEditor() {
     return new SimpleSynthAudioProcessorEditor(this);
-}
-
-bool SimpleSynthAudioProcessor::hasEditor() const
-{
-    return true;
-}
-
-
-const String SimpleSynthAudioProcessor::getName() const
-{
-    return JucePlugin_Name;
 }
 
 
 int SimpleSynthAudioProcessor::getNumParameters()
 {
-    return 0;
+    return parameterIds.size();
 }
 
 float SimpleSynthAudioProcessor::getParameter(int index)
 {
-    return 0.0f;
+    if (index < 0 || index >= parameterIds.size()) {
+        return 0.0f;
+    }
+    
+    return (*parameters)[parameterIds[index]]->getFloatValueLinear();
 }
 
 void SimpleSynthAudioProcessor::setParameter(int index, float newValue)
 {
+    if (index < 0 || index >= parameterIds.size()) {
+        return;
+    }
+
+    (*parameters)[parameterIds[index]]->setFloatValueLinear(newValue);
+    
+    // needsUIUpdate = true;
 }
 
 const String SimpleSynthAudioProcessor::getParameterName(int index)
 {
-    return String::empty;
+    if (index < 0 || index >= parameterIds.size()) {
+        return String::empty;
+    }
+    
+    return String(parameterIds[index] +
+                  + " (" + (*parameters)[parameterIds[index]]->getName() + ')');
 }
 
 const String SimpleSynthAudioProcessor::getParameterText(int index)
 {
-    return String::empty;
-}
-
-
-const String SimpleSynthAudioProcessor::getInputChannelName(int channelIndex) const
-{
-    return String (channelIndex + 1);
-}
-
-const String SimpleSynthAudioProcessor::getOutputChannelName(int channelIndex) const
-{
-    return String (channelIndex + 1);
-}
-
-bool SimpleSynthAudioProcessor::isInputChannelStereoPair(int index) const
-{
-    return true;
-}
-
-bool SimpleSynthAudioProcessor::isOutputChannelStereoPair(int index) const
-{
-    return true;
-}
-
-
-bool SimpleSynthAudioProcessor::acceptsMidi() const
-{
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-bool SimpleSynthAudioProcessor::producesMidi() const
-{
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
-    return false;
-   #endif
-}
-
-bool SimpleSynthAudioProcessor::silenceInProducesSilenceOut() const
-{
-    return false;
-}
-
-double SimpleSynthAudioProcessor::getTailLengthSeconds() const
-{
-    return 0.0;
-}
-
-int SimpleSynthAudioProcessor::getNumPrograms()
-{
-    return 0;
-}
-
-
-int SimpleSynthAudioProcessor::getCurrentProgram()
-{
-    return 0;
-}
-
-void SimpleSynthAudioProcessor::setCurrentProgram(int index)
-{
-}
-
-const String SimpleSynthAudioProcessor::getProgramName(int index)
-{
-    return String::empty;
-}
-
-void SimpleSynthAudioProcessor::changeProgramName(int index, const String& newName)
-{
+    if (index < 0 && index > parameterIds.size()) {
+        return String::empty;
+    }
+    
+    return (*parameters)[parameterIds[index]]->getValueText();
 }
 
 
 void SimpleSynthAudioProcessor::getStateInformation(MemoryBlock& destData)
 {
-    XmlElement xml (JucePlugin_Name "_settings");
+    XmlElement xml(JucePlugin_Name "_settings");
     
-    xml.setAttribute ("uiWidth", lastUIWidth);
-    xml.setAttribute ("uiHeight", lastUIHeight);
-    xml.setAttribute ("gain", gain);
+    for (const String& paramId : parameterIds) {
+        xml.setAttribute(paramId, (*parameters)[paramId]->getFloatValueLinear());
+    }
     
-    copyXmlToBinary (xml, destData);
+    copyXmlToBinary(xml, destData);
 }
 
 void SimpleSynthAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
@@ -203,10 +126,13 @@ void SimpleSynthAudioProcessor::setStateInformation(const void* data, int sizeIn
     {
         if (xmlState->hasTagName(JucePlugin_Name "_settings"))
         {
-            lastUIWidth = xmlState->getIntAttribute("uiWidth", lastUIWidth);
-            lastUIHeight = xmlState->getIntAttribute("uiHeight", lastUIHeight);
+            for (const String& paramId : parameterIds) {
+                float prevValue = (*parameters)[paramId]->getFloatValueLinear();
+                float newValue = (float) xmlState->getDoubleAttribute(paramId, prevValue);
+                (*parameters)[paramId]->setFloatValueLinear(newValue);
+            }
             
-            gain  = (float) xmlState->getDoubleAttribute("gain", gain);
+            needsUIUpdate = true;
         }
     }
 }

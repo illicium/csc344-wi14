@@ -1,28 +1,54 @@
 #include "SimpleSynthVoice.h"
 #include "SimpleSynthSound.h"
 
+
 SimpleSynthVoice::SimpleSynthVoice()
-    : curAngle(0.0),
+    : osc1(make_shared<SynthOsc>(getSampleRate())),
+    osc2(make_shared<SynthOsc>(getSampleRate())),
+    adsr1(make_shared<SynthADSR>(getSampleRate())),
+    adsr2(make_shared<SynthADSR>(getSampleRate())),
+    lfo1(make_shared<SynthLFO>(getSampleRate())),
+    //lfo2(make_shared<SynthLFO>(getSampleRate())),
     playing(false)
 {
-    gain = Decibels::decibelsToGain(-3.0);
+    inheritParameters(*osc1, "osc1");
+    inheritParameters(*osc2, "osc2");
+    inheritParameters(*adsr1, "adsr1");
+    inheritParameters(*adsr2, "adsr2");
+    inheritParameters(*lfo1, "lfo1");
+    //inheritParameters(*lfo2, "lfo2");
+    
+    //osc1->addFrequencyModifier(osc2);
+    
+    osc1->addFrequencyModifier(lfo1);
+    osc2->addFrequencyModifier(lfo1);
+    
+    osc1->addAmplitudeModifier(adsr1);
+    osc2->addAmplitudeModifier(adsr2);
 }
 
 void SimpleSynthVoice::startNote(int midiNoteNumber, float velocity,
-                                 SynthesiserSound* /*sound*/,
-                                 int /*currentPitchWheelPosition*/)
+                                 SynthesiserSound* s,
+                                 int currentPitchWheelPosition)
 {
-    freq = MidiMessage::getMidiNoteInHertz(midiNoteNumber);
-    period = getSampleRate() / freq;
-    angleDelta = 2.0 * double_Pi * (1.0 / period);
+    osc1->startNote(midiNoteNumber, velocity, currentPitchWheelPosition);
+    osc2->startNote(midiNoteNumber, velocity, currentPitchWheelPosition);
+    adsr1->startNote(midiNoteNumber, velocity, currentPitchWheelPosition);
+    adsr2->startNote(midiNoteNumber, velocity, currentPitchWheelPosition);
+    lfo1->startNote(midiNoteNumber, velocity, currentPitchWheelPosition);
+    //lfo2->startNote(midiNoteNumber, velocity, currentPitchWheelPosition);
+    
     playing = true;
 }
 
 void SimpleSynthVoice::stopNote(bool /* allowTailOff */)
 {
     clearCurrentNote();
-    curAngle = 0.0;
-    playing = false;
+    
+    adsr1->stopNote();
+    adsr2->stopNote();
+    lfo1->stopNote();
+    //lfo2->stopNote();
 }
 
 void SimpleSynthVoice::pitchWheelMoved(int /*newValue*/)
@@ -39,25 +65,28 @@ void SimpleSynthVoice::renderNextBlock(AudioSampleBuffer& outputBuffer,
 {
     if (!playing)
         return;
-    
+
     while (--numSamples >= 0) {
         float currentSample = 0.0f;
+
+        currentSample = osc1->tick() + osc2->tick();
         
-        for (int i = 1; i * freq < getSampleRate() / 2; i += 2) {
-            currentSample += (float) (sin(i * curAngle) * gain * (1.0 / i));
-        }
+        adsr1->tick();
+        adsr2->tick();
+        lfo1->tick();
+        //lfo2->tick();
         
         for (int i = outputBuffer.getNumChannels(); --i >= 0;) {
             *outputBuffer.getSampleData(i, startSample) += currentSample;
         }
         
-        
-        curAngle += angleDelta;
-        if (curAngle > 2.0 * double_Pi) {
-            curAngle -= 2.0 * double_Pi;
-        }
-        
         startSample++;
+    }
+    
+    if (!adsr1->isActive() && !adsr2->isActive()) {
+        osc1->stopNote();
+        osc2->stopNote();
+        playing = false;
     }
 }
 
