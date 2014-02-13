@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="uRHVqL" name="SimpleFilterTest" projectType="consoleapp"
+              version="1.0.0" bundleIdentifier="com.yourcompany.SimpleFilterTest"
+              includeBinaryInAppConfig="1" jucerVersion="3.1.0">
+  <MAINGROUP id="je9Azs" name="SimpleFilterTest">
+    <GROUP id="{76B481BF-F927-C4B4-A104-C68B66F33D31}" name="Source">
+      <GROUP id="{614C51DF-EA2B-C08D-2EB6-4560705CEE22}" name="SimpleFilter">
+        <FILE id="ofbfF5" name="ChebyshevFilter.cpp" compile="1" resource="0"
+              file="../Source/ChebyshevFilter.cpp"/>
+        <FILE id="SB3beO" name="ChebyshevFilter.h" compile="0" resource="0"
+              file="../Source/ChebyshevFilter.h"/>
+      </GROUP>
+      <FILE id="Ef1Scy" name="SimpleFilterTest.cpp" compile="1" resource="0"
+            file="Source/SimpleFilterTest.cpp"/>
+      <FILE id="Rc78T8" name="SimpleFilterTest.h" compile="0" resource="0"
+            file="Source/SimpleFilterTest.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="1" optimisation="1" targetName="SimpleFilterTest"/>
+        <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="default" osxArchitecture="default"
+                       isDebug="0" optimisation="2" targetName="SimpleFilterTest"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../../SDKs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../../SDKs/JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="1"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>
