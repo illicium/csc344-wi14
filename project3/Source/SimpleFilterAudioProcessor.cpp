@@ -60,7 +60,7 @@ void SimpleFilterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBu
             channelData[i] *= gain_in;
 
             // apply dist
-            if (dist >= 1.0) {
+            if (dist >= 1.0 + numeric_limits<double>::epsilon()) {
                 channelData[i] = 2.0 / (1.0 + pow(dist, -channelData[i])) - 1.0;
             }
         }
