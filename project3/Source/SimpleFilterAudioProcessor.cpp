@@ -36,10 +36,6 @@ void SimpleFilterAudioProcessor::prepareToPlay(double sampleRate, int samplesPer
 {
     filterDelayBuffer.clear();
     updateFilterTheta();
-    
-    for (auto coeff : *filter.getCoefficientsB()) {
-        cout << coeff << endl;
-    }
 }
 
 void SimpleFilterAudioProcessor::releaseResources()
