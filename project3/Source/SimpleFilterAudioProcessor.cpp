@@ -8,6 +8,7 @@ SimpleFilterAudioProcessor::SimpleFilterAudioProcessor()
     Parameterized({
         {"gain_in", make_shared<Parameter<double>>("Input Gain (dB)", 0.0, -24.0, 24.0)},
         {"freq", make_shared<WarpedParameter<double>>("Filter Frequency", 500, 100.0, 20000.0, 700.0)},
+        {"ripple", make_shared<WarpedParameter<double>>("Filter Ripple", 1.0, 0.01, 6.0, 1.0)},
         {"dist", make_shared<WarpedParameter<double>>("Distortion", 1.0, 1.0, 1000.0, 10.0)}
     }),
     filter(),
@@ -18,19 +19,35 @@ SimpleFilterAudioProcessor::SimpleFilterAudioProcessor()
         param.second->addListener(this);
     }
     
-    filter.setRipple(0.9691);
+    filter.setRipple(1.0);
 }
 
+/**
+ * Update filter internal state (ripple) with current parameters
+ */
+void SimpleFilterAudioProcessor::updateFilterRipple()
+{
+    double ripple = Parameterized::getParameter<double>("ripple")->getValue();
+    filter.setRipple(ripple);
+}
+
+/**
+ * Update filter internal state (theta) with current parameters
+ */
 void SimpleFilterAudioProcessor::updateFilterTheta()
 {
     filter.setTheta(calculateFilterTheta(getSampleRate()));
 }
 
+/**
+ * Given the sample rate in Hz, return the filter angle theta for the current filter frequency
+ */
 double SimpleFilterAudioProcessor::calculateFilterTheta(double sampleRate)
 {
     double freq = Parameterized::getParameter<double>("freq")->getValue();
     return (freq / (sampleRate / 2)) * double_Pi;
 }
+
 
 void SimpleFilterAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
@@ -106,6 +123,8 @@ void SimpleFilterAudioProcessor::parameterValueChanged(ParameterBase* param)
 {
     if (param == Parameterized::getParameter("freq").get()) {
         updateFilterTheta();
+    } else if (param == Parameterized::getParameter("ripple").get()) {
+        updateFilterRipple();
     }
 }
 

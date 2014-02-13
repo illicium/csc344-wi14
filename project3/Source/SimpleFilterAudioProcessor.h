@@ -83,6 +83,7 @@ public:
 
 private:
     void updateFilterTheta();
+    void updateFilterRipple();
     double calculateFilterTheta(double sampleRate);
     
     vector<String> parameterIds;

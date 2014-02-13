@@ -4,6 +4,7 @@
 
 ChebyshevFilter::ChebyshevFilter()
     : order(4),
+    theta(0.0),
     sPoles(make_shared<vector<complex<double>>>(order)),
     zPoles(make_shared<vector<complex<double>>>(order)),
     coefficientsA(make_shared<vector<double>>()),
@@ -41,6 +42,8 @@ void ChebyshevFilter::setRipple(double newValue)
     
     recalculateSPoles();
     recalculateZPoles();
+    recalculateCoefficients();
+    recalculateGain();
 }
 
 
@@ -119,5 +122,8 @@ void ChebyshevFilter::recalculateCoefficients()
 
 void ChebyshevFilter::recalculateGain()
 {
-    dcGain = 1.0 / accumulate(coefficientsB->begin(), coefficientsB->end(), complex<double>(0)).real();
+    auto sum = accumulate(coefficientsB->begin(), coefficientsB->end(), complex<double>(0)).real();
+    if (sum > 0) {
+        dcGain = 1.0 / sum;
+    }
 }
