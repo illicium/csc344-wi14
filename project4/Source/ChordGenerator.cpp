@@ -15,18 +15,10 @@ void ChordGenerator::generate(const Meter &start, EventSequence &eventSequence)
     Meter sixteenth{0, 0, 1};
     Meter sixteenth_ish{0, 0, 0.9};
     
-    Meter chordStart;
     Meter duration;
     
     for (const Chord &chord : chordProgression) {
         const std::vector<int> &chordIntervals = chord.getIntervals();
-
-        chordStart = curTime;
-        for (int i = 0; i < 2; i++) {
-            if (r.nextFloat() < 0.5f) {
-                chordStart += sixteenth;
-            }
-        }
 
         duration = eighth_ish;
         for (int i = 0; i < 2; i++) {
@@ -44,7 +36,7 @@ void ChordGenerator::generate(const Meter &start, EventSequence &eventSequence)
             Meter fudge2{0, 0, 0, r.nextDouble() / 4};
             
             eventSequence.addNote(channel, noteNumber, 1.0f,
-                                  chordStart + fudge, duration + fudge2);
+                                  curTime + fudge, duration + fudge2);
         }
         
         curTime += half;
