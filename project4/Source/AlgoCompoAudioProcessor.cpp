@@ -75,7 +75,7 @@ void AlgoCompoAudioProcessor::releaseResources()
 
 void AlgoCompoAudioProcessor::processBlock (AudioSampleBuffer &buffer, MidiBuffer &midiMessages)
 {
-    AudioPlayHead *playhead = nullptr; // getPlayHead();
+    AudioPlayHead *playhead = getPlayHead();
     if (playhead != nullptr) {
         playhead->getCurrentPosition(pos);
         
