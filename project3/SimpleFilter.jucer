@@ -3,12 +3,13 @@
 <JUCERPROJECT id="B2Q1Fb" name="SimpleFilter" projectType="audioplug" version="1.0.0"
               bundleIdentifier="com.pomortsev.SimpleFilter" includeBinaryInAppConfig="1"
               buildVST="0" buildAU="1" pluginName="SimpleFilter" pluginDesc="SimpleFilter"
-              pluginManufacturer="illicium" pluginManufacturerCode="Manu" pluginCode="Plug"
+              pluginManufacturer="illicium" pluginManufacturerCode="Illi" pluginCode="Smfl"
               pluginChannelConfigs="{1, 1}, {2, 2}" pluginIsSynth="0" pluginWantsMidiIn="0"
               pluginProducesMidiOut="0" pluginSilenceInIsSilenceOut="1" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="SimpleFilterAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.SimpleFilter"
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0"
-              companyName="illicium">
+              companyName="illicium" buildVST3="0" buildRTAS="0" buildAAX="0"
+              pluginManufacturerEmail="support@yourcompany.com">
   <MAINGROUP id="KHrfmO" name="SimpleFilter">
     <GROUP id="{4001D9AE-7AF3-4272-C062-40689263F9AD}" name="Source">
       <GROUP id="{1554C60B-1A1C-8E5E-19BE-25E0502EF87E}" name="Common">

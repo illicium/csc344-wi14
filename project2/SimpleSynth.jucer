@@ -3,12 +3,13 @@
 <JUCERPROJECT id="xxe8Qo" name="SimpleSynth" projectType="audioplug" version="1.0.0"
               bundleIdentifier="com.pomortsev.SimpleSynth" includeBinaryInAppConfig="1"
               buildVST="0" buildAU="1" pluginName="SimpleSynth" pluginDesc="SimpleSynth"
-              pluginManufacturer="illicium" pluginManufacturerCode="Manu" pluginCode="Plug"
+              pluginManufacturer="illicium" pluginManufacturerCode="Illi" pluginCode="Smsy"
               pluginChannelConfigs="{0, 1}, {0, 2}" pluginIsSynth="1" pluginWantsMidiIn="1"
               pluginProducesMidiOut="0" pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="SimpleSynthAU" pluginRTASCategory="" aaxIdentifier="com.pomortsev.SimpleSynth"
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.0"
-              companyName="illicium">
+              companyName="illicium" buildVST3="0" buildRTAS="0" buildAAX="0"
+              pluginManufacturerEmail="support@yourcompany.com">
   <MAINGROUP id="oHgzX1" name="SimpleSynth">
     <GROUP id="{8B79ACEA-99D9-1670-89F0-7639368DA37D}" name="Source">
       <GROUP id="{15B0C410-2148-9017-97CA-3ADF8AF67E02}" name="Components">
