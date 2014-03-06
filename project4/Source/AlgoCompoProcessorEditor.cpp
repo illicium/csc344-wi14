@@ -51,7 +51,7 @@ AlgoCompoAudioProcessorEditor::AlgoCompoAudioProcessorEditor (AlgoCompoAudioProc
     addAndMakeVisible (generatorComboBox = new ComboBox ("Generator Combo Box"));
     generatorComboBox->setEditableText (false);
     generatorComboBox->setJustificationType (Justification::centredLeft);
-    generatorComboBox->setTextWhenNothingSelected (String::empty);
+    generatorComboBox->setTextWhenNothingSelected (TRANS("Drums"));
     generatorComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     generatorComboBox->addItem (TRANS("Drums"), 1);
     generatorComboBox->addItem (TRANS("Bass"), 2);
@@ -193,7 +193,7 @@ BEGIN_JUCER_METADATA
          bold="0" italic="0" justification="33"/>
   <COMBOBOX name="Generator Combo Box" id="bae13ffd17014d09" memberName="generatorComboBox"
             virtualName="" explicitFocusOrder="0" pos="48 88 150 24" editable="0"
-            layout="33" items="Drums&#10;Bass&#10;Chords" textWhenNonSelected=""
+            layout="33" items="Drums&#10;Bass&#10;Chords" textWhenNonSelected="Drums"
             textWhenNoItems="(no choices)"/>
 </JUCER_COMPONENT>
 

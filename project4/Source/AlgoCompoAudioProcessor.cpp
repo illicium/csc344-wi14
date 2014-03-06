@@ -53,7 +53,7 @@ AlgoCompoAudioProcessor::AlgoCompoAudioProcessor()
     drumGenerator(DrumGenerator()),
     bassGenerator(BassGenerator(chordProgression)),
     chordGenerator(ChordGenerator(chordProgression)),
-    selectedGenerator(1)
+    selectedGenerator(0)
 {
 }
 
