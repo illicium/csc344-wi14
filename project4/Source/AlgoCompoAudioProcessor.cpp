@@ -3,13 +3,56 @@
 #include "AlgoCompoAudioProcessor.h"
 
 #include "Meter.h"
+#include "Note.h"
 
 
 AlgoCompoAudioProcessor::AlgoCompoAudioProcessor()
     : bpm(120),
     timeSignature(TimeSignature::COMMON_TIME),
+    chordProgression({
+        Chord(Note::Name::B_FLAT, Chord::Quality::MajorSeventh),        // A
+        Chord(Note::Name::G, Chord::Quality::DominantSeventh),
+        Chord(Note::Name::C, Chord::Quality::MinorSeventh),
+        Chord(Note::Name::F, Chord::Quality::DominantSeventh),
+
+        Chord(Note::Name::B_FLAT, Chord::Quality::MajorSeventh),        // B
+        Chord(Note::Name::G, Chord::Quality::DominantSeventh),
+        Chord(Note::Name::C, Chord::Quality::MinorSeventh),
+        Chord(Note::Name::F, Chord::Quality::DominantSeventh),
+        
+        Chord(Note::Name::F, Chord::Quality::MinorSeventh),             // C
+        Chord(Note::Name::B_FLAT, Chord::Quality::DominantSeventh),
+        Chord(Note::Name::E_FLAT, Chord::Quality::MajorSeventh),
+        Chord(Note::Name::A_FLAT, Chord::Quality::DominantSeventh),
+
+        Chord(Note::Name::D, Chord::Quality::MinorSeventh),             // D
+        Chord(Note::Name::G, Chord::Quality::DominantSeventh),
+        Chord(Note::Name::C, Chord::Quality::MinorSeventh),
+        Chord(Note::Name::F, Chord::Quality::DominantSeventh),
+        
+        Chord(Note::Name::B_FLAT, Chord::Quality::MajorSeventh),        // A
+        Chord(Note::Name::G, Chord::Quality::DominantSeventh),
+        Chord(Note::Name::C, Chord::Quality::MinorSeventh),
+        Chord(Note::Name::F, Chord::Quality::DominantSeventh),
+        
+        Chord(Note::Name::B_FLAT, Chord::Quality::MajorSeventh),        // B
+        Chord(Note::Name::G, Chord::Quality::DominantSeventh),
+        Chord(Note::Name::C, Chord::Quality::MinorSeventh),
+        Chord(Note::Name::F, Chord::Quality::DominantSeventh),
+        
+        Chord(Note::Name::F, Chord::Quality::MinorSeventh),             // C
+        Chord(Note::Name::B_FLAT, Chord::Quality::DominantSeventh),
+        Chord(Note::Name::E_FLAT, Chord::Quality::MajorSeventh),
+        Chord(Note::Name::A_FLAT, Chord::Quality::DominantSeventh),
+        
+        Chord(Note::Name::C, Chord::Quality::MinorSeventh),             // F
+        Chord(Note::Name::F, Chord::Quality::DominantSeventh),
+        Chord(Note::Name::B_FLAT, Chord::Quality::MajorSeventh),
+        Chord(Note::Name::B_FLAT, Chord::Quality::MajorSeventh)
+    }),
     drumGenerator(DrumGenerator()),
-    bassGenerator(BassGenerator()),
+    bassGenerator(BassGenerator(chordProgression)),
+    chordGenerator(ChordGenerator(chordProgression)),
     selectedGenerator(1)
 {
 }

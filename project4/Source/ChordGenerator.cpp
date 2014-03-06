@@ -1,20 +1,53 @@
 #include "ChordGenerator.h"
 
+#include "Midi.h"
+
 void ChordGenerator::generate(const Meter &start, EventSequence &eventSequence)
 {
     Random r;
     
     Meter curTime = start;
+    Meter half{0, 2, 0};
     Meter quarter{0, 1, 0};
     Meter quarter_ish{0, 0, 0, 3.9};
+    Meter eighth{0, 0, 2};
+    Meter eighth_ish{0, 0, 0, 1.9};
+    Meter sixteenth{0, 0, 1};
+    Meter sixteenth_ish{0, 0, 0.9};
     
-    for (int bar = 0; bar < 10; bar++) {
-        for (int n = 0; n < 16; n++) {
-            eventSequence.addNote(channel, 60 + n, 1.0f,
-                                  curTime, quarter_ish);
-            
-            curTime += quarter;
+    Meter chordStart;
+    Meter duration;
+    
+    for (const Chord &chord : chordProgression) {
+        const std::vector<int> &chordIntervals = chord.getIntervals();
+
+        chordStart = curTime;
+        for (int i = 0; i < 2; i++) {
+            if (r.nextFloat() < 0.5f) {
+                chordStart += sixteenth;
+            }
         }
+
+        duration = eighth_ish;
+        for (int i = 0; i < 2; i++) {
+            if (r.nextFloat() < 0.5f) {
+                duration += sixteenth;
+            }
+        }
+        
+        for (int interval : chordIntervals) {
+            int noteNumber = Midi::C2 +
+                             static_cast<int>(chord.getRoot()) +
+                             interval;
+            
+            Meter fudge{0, 0, 0, r.nextDouble() / 8};
+            Meter fudge2{0, 0, 0, r.nextDouble() / 4};
+            
+            eventSequence.addNote(channel, noteNumber, 1.0f,
+                                  chordStart + fudge, duration + fudge2);
+        }
+        
+        curTime += half;
     }
     
 }

@@ -8,6 +8,8 @@
 #include "Parameter.h"
 #include "ParameterizedAudioProcessor.h"
 
+#include "Chord.h"
+
 #include "EventSequence.h"
 #include "DrumGenerator.h"
 #include "BassGenerator.h"
@@ -98,6 +100,8 @@ private:
     AudioPlayHead::CurrentPositionInfo pos;
     
     EventSequence eventSequence;
+    
+    std::vector<Chord> chordProgression;
     DrumGenerator drumGenerator;
     BassGenerator bassGenerator;
     ChordGenerator chordGenerator;

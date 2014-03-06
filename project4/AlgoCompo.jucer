@@ -57,6 +57,8 @@
       <FILE id="tPBwd6" name="Note.h" compile="0" resource="0" file="Source/Note.h"/>
       <FILE id="VTNv9E" name="NoteEvent.cpp" compile="1" resource="0" file="Source/NoteEvent.cpp"/>
       <FILE id="UYT4hP" name="NoteEvent.h" compile="0" resource="0" file="Source/NoteEvent.h"/>
+      <FILE id="GQQAmI" name="Scale.cpp" compile="1" resource="0" file="Source/Scale.cpp"/>
+      <FILE id="iNKtGy" name="Scale.h" compile="0" resource="0" file="Source/Scale.h"/>
       <FILE id="UlVR3K" name="TimeSignature.cpp" compile="1" resource="0"
             file="Source/TimeSignature.cpp"/>
       <FILE id="yEyJ6T" name="TimeSignature.h" compile="0" resource="0" file="Source/TimeSignature.h"/>

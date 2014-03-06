@@ -1,8 +1,11 @@
 #ifndef BASSGENERATOR_H_INCLUDED
 #define BASSGENERATOR_H_INCLUDED
 
+#include <vector>
+
 #include "EventGenerator.h"
 #include "Note.h"
+#include "Chord.h"
 
 /**
  * Generates a bassline
@@ -11,19 +14,18 @@ class BassGenerator : public EventGenerator
 {
 public:
     BassGenerator(int channel = 1)
-        : EventGenerator(channel),
-        key(Note::Name::C)
+        : EventGenerator(channel)
     {}
     
-    BassGenerator(Note::Name key, int channel = 1)
+    BassGenerator(const std::vector<Chord> &chordProgression, int channel = 1)
         : EventGenerator(channel),
-        key(key)
+        chordProgression(chordProgression)
     {}
     
     void generate(const Meter &start, EventSequence &eventSequence);
     
 private:
-    Note::Name key;
+    std::vector<Chord> chordProgression;
 };
 
 
